@@ -17,6 +17,6 @@ public class FreehandListener extends MouseInputAdapter {
     @Override
     public void mouseReleased(MouseEvent event) {
         myApp.storePoints();
-        System.out.println(myApp.drawings.size());
+        System.out.println(myApp.getDrawType() + " " + myApp.drawings.size());
     }
 }
