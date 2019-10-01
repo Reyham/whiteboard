@@ -1,6 +1,7 @@
 package com.framelessboard;
 
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.Color;
@@ -42,19 +43,22 @@ public class CanvasPanel extends JPanel {
     public void paintComponent(Graphics g) {
         g.setColor(currentColor);
         Graphics2D g2 = (Graphics2D) g;
-        JSONObject newMeg = new JSONObject();
-        newMeg.put("Object", myApp.getDrawType());
-        JSONObject newAction = new JSONObject();
+        JSONObject newMsg = new JSONObject();
+        newMsg.put("Object", myApp.getDrawType());
         int width = 0;
         int height = 0;
+        JSONObject testMsg;
+        JSONObject testAction;
         //this will be for freehand - use switch cases of if elses to decide how to repaint.
         switch (myApp.getDrawType()) {
             case "Freehand":
+                System.out.println(myApp.getPoints());
                 for (int i = 1; i < myApp.getPoints().size(); i++) {
                     Point p1 = myApp.getPoints().get(i - 1);
                     Point p2 = myApp.getPoints().get(i);
                     g.drawLine(p1.x, p1.y, p2.x, p2.y);
                 }
+                addFreeAction(newMsg, (ArrayList<Point>) myApp.getPoints());
                 break;
             case "Eraser":
                 g.setColor(Color.WHITE);
@@ -73,7 +77,7 @@ public class CanvasPanel extends JPanel {
                 else {
                     g.drawRect(myApp.lastReleaseX, myApp.lastReleaseY, width, height);
                 }
-                addShapeAction(newMeg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
+                addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
                 break;
             case "Ellipse":
                 width = Math.abs(myApp.lastReleaseX - myApp.lastPressX);
@@ -84,7 +88,7 @@ public class CanvasPanel extends JPanel {
                 else {
                     g2.draw(new Ellipse2D.Double(myApp.lastReleaseX, myApp.lastReleaseY, width, height));
                 }
-                addShapeAction(newMeg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
+                addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
                 break;
             case "Circle":
                 width = Math.abs(myApp.lastReleaseX - myApp.lastPressX);
@@ -101,25 +105,36 @@ public class CanvasPanel extends JPanel {
                 else {
                     g2.draw(new Ellipse2D.Double(myApp.lastReleaseX, myApp.lastReleaseY, width, height));
                 }
-                addShapeAction(newMeg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
+                addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
                 break;
-            case "DrawAll":
+            case "Draw all":
                 //TODO: ADD Loop
-                JSONObject testMsg = new JSONObject();
+                break;
+            case "DrawShape":
+                testMsg = new JSONObject();
                 testMsg.put("Object", "Rectangle");
-                JSONObject testAction = new JSONObject();
-                testAction.put("lpx", 349);
-                testAction.put("lpy", 253);
-                testAction.put("lrx", 536);
-                testAction.put("lry", 401);
-                testMsg.put("Action", testAction);
+                addShapeAction(testMsg, 349,253,536,401);
+                drawAction(g, testMsg.toString());
+                break;
+            case "DrawFreeHand":
+                testMsg = new JSONObject();
+                testMsg.put("Object", "Freehand");
+                ArrayList<Point> points = new ArrayList<Point>();
+                points.add(new Point(400,200));
+                points.add(new Point(500,250));
+                points.add(new Point(400,300));
+                points.add(new Point(200,150));
+                addFreeAction(testMsg, points);
                 System.out.println(testMsg);
                 drawAction(g, testMsg.toString());
+                break;
             default:
                 System.out.println("Uhh what drawing is that?");
                 break;
         }
     }
+
+
 
     public void addShapeAction(JSONObject newMsg, int lpx, int lpy, int lrx, int lry){
         JSONObject newAction = new JSONObject();
@@ -131,9 +146,21 @@ public class CanvasPanel extends JPanel {
         System.out.println(newMsg);
     }
 
-    public void addFreeAction(JSONObject newMsg, Integer[] points){
-
+    public void addFreeAction(JSONObject newMsg, ArrayList<Point> points){
+        JSONObject newAction = new JSONObject();
+        ArrayList<ArrayList<Integer>> newPoints = new ArrayList<ArrayList<Integer>>();
+        System.out.println(points);
+        for (int i = 0; i < points.size(); i++) {
+            Point p = points.get(i);
+            ArrayList<Integer> point = new ArrayList<Integer>(2);
+            point.add(p.x);
+            point.add(p.y);
+            newPoints.add(point);
+        }
+        newAction.put("Points", newPoints);
+        newMsg.put("Action", newAction);
     }
+
 
     public void drawAction(Graphics g, String msg) {
         g.setColor(currentColor);
@@ -147,21 +174,24 @@ public class CanvasPanel extends JPanel {
         int lry = 0;
         int lpx = 0;
         int lpy = 0;
+        JSONArray points;
         //this will be for freehand - use switch cases of if elses to decide how to repaint.
         switch (object) {
             case "Freehand":
-                for (int i = 1; i < myApp.getPoints().size(); i++) {
-                    Point p1 = myApp.getPoints().get(i - 1);
-                    Point p2 = myApp.getPoints().get(i);
-                    g.drawLine(p1.x, p1.y, p2.x, p2.y);
+                points = (JSONArray) newAction.get("Points");
+                for (int i = 1; i < points.length(); i++) {
+                    JSONArray p1 = (JSONArray) points.get(i-1);
+                    JSONArray p2 = (JSONArray) points.get(i);
+                    g.drawLine( (Integer) p1.get(0), (Integer) p1.get(1), (Integer) p2.get(0), (Integer) p2.get(1));
                 }
                 break;
             case "Eraser":
                 g.setColor(Color.WHITE);
-                for (int i = 1; i < myApp.getPoints().size(); i++) {
-                    Point p1 = myApp.getPoints().get(i - 1);
-                    Point p2 = myApp.getPoints().get(i);
-                    g.drawLine(p1.x, p1.y, p2.x, p2.y);
+                points = (JSONArray) newAction.get("Points");
+                for (int i = 1; i < points.length(); i++) {
+                    JSONArray p1 = (JSONArray) points.get(i-1);
+                    JSONArray p2 = (JSONArray) points.get(i);
+                    g.drawLine( (Integer) p1.get(0), (Integer) p1.get(1), (Integer) p2.get(0), (Integer) p2.get(1));
                 }
                 break;
             case "Rectangle":

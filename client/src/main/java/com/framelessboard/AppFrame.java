@@ -31,10 +31,11 @@ public class AppFrame implements Runnable {
     AppFrame() {
         this.drawings = new ArrayList<CustomDrawing>();
         this.freeHandBuffer = new ArrayList<Point>();
-        this.currentDrawType = "Rectangle";
+        this.currentDrawType = "DrawFreeHand";
     }
     
     public List<Point> getPoints() {
+
         return freeHandBuffer;
     }
     
@@ -70,15 +71,16 @@ public class AppFrame implements Runnable {
         
         myCanvasPanel = new CanvasPanel(this);
         myCanvasPanel.setBackground( new Color(100, 250, 250, 250) );
-        
+
+
         //This has to be changed according to tool bar clicks.
         /////////////////////////////////////////////////////////
         FreehandListener myListener = new FreehandListener(this);
         ShapeListener myListener2 = new ShapeListener(this);
         /////////////////////////////////////////////////////////
         
-        myCanvasPanel.addMouseMotionListener(myListener2);
-        myCanvasPanel.addMouseListener(myListener2);
+        myCanvasPanel.addMouseMotionListener(myListener);
+        myCanvasPanel.addMouseListener(myListener);
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(myCanvasPanel);
