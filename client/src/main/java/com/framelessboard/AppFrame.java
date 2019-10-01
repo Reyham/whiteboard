@@ -1,3 +1,5 @@
+package com.framelessboard;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -29,7 +31,7 @@ public class AppFrame implements Runnable {
     AppFrame() {
         this.drawings = new ArrayList<CustomDrawing>();
         this.freeHandBuffer = new ArrayList<Point>();
-        this.currentDrawType = "Circle";
+        this.currentDrawType = "Rectangle";
     }
     
     public List<Point> getPoints() {

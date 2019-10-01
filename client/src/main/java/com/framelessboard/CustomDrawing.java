@@ -1,3 +1,5 @@
+package com.framelessboard;
+
 import java.awt.geom.*;
 import java.awt.Rectangle;
 import java.io.Serializable;
