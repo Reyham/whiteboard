@@ -31,7 +31,7 @@ public class AppFrame implements Runnable {
     AppFrame() {
         this.drawings = new ArrayList<CustomDrawing>();
         this.freeHandBuffer = new ArrayList<Point>();
-        this.currentDrawType = "DrawFreeHand";
+        this.currentDrawType = "Freehand";
     }
     
     public List<Point> getPoints() {

@@ -52,7 +52,6 @@ public class CanvasPanel extends JPanel {
         //this will be for freehand - use switch cases of if elses to decide how to repaint.
         switch (myApp.getDrawType()) {
             case "Freehand":
-                System.out.println(myApp.getPoints());
                 for (int i = 1; i < myApp.getPoints().size(); i++) {
                     Point p1 = myApp.getPoints().get(i - 1);
                     Point p2 = myApp.getPoints().get(i);
@@ -67,6 +66,7 @@ public class CanvasPanel extends JPanel {
                     Point p2 = myApp.getPoints().get(i);
                     g.drawLine(p1.x, p1.y, p2.x, p2.y);
                 }
+                addFreeAction(newMsg, (ArrayList<Point>) myApp.getPoints());
                 break;
             case "Rectangle":
                 width = Math.abs(myApp.lastReleaseX - myApp.lastPressX);
@@ -132,6 +132,7 @@ public class CanvasPanel extends JPanel {
                 System.out.println("Uhh what drawing is that?");
                 break;
         }
+        System.out.println("Message:" + newMsg.toString());
     }
 
 
@@ -149,7 +150,6 @@ public class CanvasPanel extends JPanel {
     public void addFreeAction(JSONObject newMsg, ArrayList<Point> points){
         JSONObject newAction = new JSONObject();
         ArrayList<ArrayList<Integer>> newPoints = new ArrayList<ArrayList<Integer>>();
-        System.out.println(points);
         for (int i = 0; i < points.size(); i++) {
             Point p = points.get(i);
             ArrayList<Integer> point = new ArrayList<Integer>(2);
