@@ -1,50 +1,46 @@
+import org.json.JSONObject;
 import java.awt.geom.*;
 import java.awt.Rectangle;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomDrawing implements Serializable{
+public class CustomDrawing {
     
-    public Object drawing; // too generic should be changed.
+    public JSONObject drawing;
     
-    CustomDrawing(Object drawing) {
-        this.drawing = drawing;
+    // Constructor for shapes - lines, rectangles, ellipses and circles.
+    CustomDrawing(String drawType, String color, int lpx, int lpy, int rpx, int rpy) {
+        drawing.put("Object", drawType);
+        JSONObject attributes = new JSONObject();
+        attributes.put("color", color);
+        attributes.put("lpx", lpx);
+        attributes.put("lpy", lpy);
+        attributes.put("lrx", lrx);
+        attributes.put("lry", lry);
+        drawing.put("Action", attributes);
     }
     
-    CustomDrawing(int x1, int y1, int x2, int y2, String shape) {
-        int width = x2 - x1;
-        int height = y2 - y1;
-        if (shape.equals("Rectangle")) {
-            this.drawing = new Rectangle(x1, y1, width, height);
-        }
+    // Constructor for freehand drawings - freehand lines and erasers.
+    CustomDrawing(String drawType, String color, ArrayList<ArrayList<Integer>> points) {
+        drawing.put("Object", drawType);
+        JSONObject attributes = new JSONObject();
+        attributes.put("color", color);
+        attributes.put("Points", points);
+        drawing.put("Action", attributes);
     }
     
-    public Object getDrawing() {
+    // Constructor for text drawings.
+    CustomDrawing(String drawType, String color, int lpx, int lpy, String text) {
+        drawing.put("Object", drawType);
+        JSONObject attributes = new JSONObject();
+        attributes.put("color", color);
+        attributes.put("lpx", lpx);
+        attributes.put("lpy", lpy);
+        attributes.put("text", text);
+    }
+    
+    public JSONObject getDrawing() {
         return drawing;
     }
-    
-    /*
-    List<Point> x;
-    
-    {
-        idk.
-    }
-    
-    Shape;
-    {
-        start point x;
-        start point y;
-        
-        end point x;
-        end point y;
-        
-        type: rectangle, ellipse, circle, line, Freehand;
-        
-        color: color;
-        
-    }
-    
-    */
     
 }

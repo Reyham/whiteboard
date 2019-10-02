@@ -90,6 +90,15 @@ public class CanvasPanel extends JPanel {
                 g2.draw(new Ellipse2D.Double(myApp.lastReleaseX, myApp.lastReleaseY, width, height));
             }
             break;
+        case "Line":
+            g2.draw(new Line2D.Double(myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY));
+            break;
+        case "Text":
+            g2.drawString("YEET", myApp.lastPressX, myApp.lastPressY);
+            break;
+        case "DrawAll":
+            //g.drawFile();
+            break;
         default:
             System.out.println("Uhh what drawing is that?");
             break;
