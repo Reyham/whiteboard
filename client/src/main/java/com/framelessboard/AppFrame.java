@@ -1,5 +1,7 @@
 package com.framelessboard;
 
+import org.json.JSONObject;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -62,6 +64,39 @@ public class AppFrame implements Runnable {
     public void storeShape() {
         CustomDrawing drawing = new CustomDrawing(this.lastPressX, this.lastPressY, this.lastReleaseX, this.lastReleaseY, this.currentDrawType);
         drawings.add(drawing);
+    }
+
+    public JSONObject addShapeAction(String color){
+        JSONObject newMsg = new JSONObject();
+        newMsg.put("Object", getDrawType());
+        JSONObject newAction = new JSONObject();
+        newAction.put("lpx", this.lastPressX);
+        newAction.put("lpy", this.lastPressY);
+        newAction.put("lrx", this.lastReleaseX);
+        newAction.put("lry", this.lastReleaseY);
+        newAction.put("color", color);
+        newMsg.put("Action", newAction);
+        System.out.println(newMsg);
+        return newMsg;
+    }
+
+    public JSONObject addFreeAction(String color){
+        JSONObject newMsg = new JSONObject();
+        newMsg.put("Object", getDrawType());
+        JSONObject newAction = new JSONObject();
+        ArrayList<ArrayList<Integer>> newPoints = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < freeHandBuffer.size(); i++) {
+            Point p = freeHandBuffer.get(i);
+            ArrayList<Integer> point = new ArrayList<Integer>(2);
+            point.add(p.x);
+            point.add(p.y);
+            newPoints.add(point);
+        }
+        newAction.put("Points", newPoints);
+        newAction.put("color", color);
+        newMsg.put("Action", newAction);
+        System.out.println(newMsg);
+        return newMsg;
     }
     
     

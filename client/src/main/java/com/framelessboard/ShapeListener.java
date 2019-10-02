@@ -18,6 +18,7 @@ public class ShapeListener extends MouseInputAdapter {
     @Override
     public void mouseReleased(MouseEvent event) {
         myApp.drawShapeEnd(event.getX(), event.getY());
+        myApp.addShapeAction("BLUE");
         myApp.storeShape();
         myApp.getCanvasPanel().repaint();
         System.out.println(myApp.getDrawType() + " " + myApp.drawings.size());

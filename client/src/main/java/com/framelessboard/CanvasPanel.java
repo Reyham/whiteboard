@@ -48,7 +48,6 @@ public class CanvasPanel extends JPanel {
         int width = 0;
         int height = 0;
         JSONObject testMsg;
-        JSONObject testAction;
         //this will be for freehand - use switch cases of if elses to decide how to repaint.
         switch (myApp.getDrawType()) {
             case "Freehand":
@@ -57,7 +56,7 @@ public class CanvasPanel extends JPanel {
                     Point p2 = myApp.getPoints().get(i);
                     g.drawLine(p1.x, p1.y, p2.x, p2.y);
                 }
-                addFreeAction(newMsg, (ArrayList<Point>) myApp.getPoints());
+                //addFreeAction(newMsg, (ArrayList<Point>) myApp.getPoints());
                 break;
             case "Eraser":
                 g.setColor(Color.WHITE);
@@ -66,7 +65,7 @@ public class CanvasPanel extends JPanel {
                     Point p2 = myApp.getPoints().get(i);
                     g.drawLine(p1.x, p1.y, p2.x, p2.y);
                 }
-                addFreeAction(newMsg, (ArrayList<Point>) myApp.getPoints());
+                //addFreeAction(newMsg, (ArrayList<Point>) myApp.getPoints());
                 break;
             case "Rectangle":
                 width = Math.abs(myApp.lastReleaseX - myApp.lastPressX);
@@ -77,7 +76,7 @@ public class CanvasPanel extends JPanel {
                 else {
                     g.drawRect(myApp.lastReleaseX, myApp.lastReleaseY, width, height);
                 }
-                addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
+                //addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
                 break;
             case "Ellipse":
                 width = Math.abs(myApp.lastReleaseX - myApp.lastPressX);
@@ -88,7 +87,7 @@ public class CanvasPanel extends JPanel {
                 else {
                     g2.draw(new Ellipse2D.Double(myApp.lastReleaseX, myApp.lastReleaseY, width, height));
                 }
-                addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
+                //addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
                 break;
             case "Circle":
                 width = Math.abs(myApp.lastReleaseX - myApp.lastPressX);
@@ -105,7 +104,7 @@ public class CanvasPanel extends JPanel {
                 else {
                     g2.draw(new Ellipse2D.Double(myApp.lastReleaseX, myApp.lastReleaseY, width, height));
                 }
-                addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
+                //addShapeAction(newMsg, myApp.lastPressX, myApp.lastPressY, myApp.lastReleaseX, myApp.lastReleaseY);
                 break;
             case "Draw all":
                 //TODO: ADD Loop
@@ -132,7 +131,7 @@ public class CanvasPanel extends JPanel {
                 System.out.println("Uhh what drawing is that?");
                 break;
         }
-        System.out.println("Message:" + newMsg.toString());
+        //System.out.println("Message:" + newMsg.toString());
     }
 
 
