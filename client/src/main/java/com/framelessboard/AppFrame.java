@@ -1,3 +1,5 @@
+package com.framelessboard;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
@@ -16,6 +18,8 @@ public class AppFrame implements Runnable {
     
     public JFrame frame;
     public CanvasPanel myCanvasPanel;
+    public HTTPConnect myHTTPConeect;
+    public String username;
     
     public String fileName;
     public String currentDrawType;
@@ -40,6 +44,9 @@ public class AppFrame implements Runnable {
         this.textBuffer = "YEET";
         this.fileName = null;
         this.currentDrawType = "Freehand";
+        this.username = "abc";
+        this.myHTTPConeect = new HTTPConnect();
+        this.myHTTPConeect.establishConnect(this.username);
     }
     
     public List<Point> getPoints() {
@@ -83,7 +90,7 @@ public class AppFrame implements Runnable {
     
     public void storeText() {
         CustomDrawing drawing = new CustomDrawing(currentDrawType, currentColor, lastPressX, lastPressY, textBuffer);
-        drawing.add(drawing);
+        drawings.add(drawing);
     }
     
     @Override
@@ -132,7 +139,7 @@ public class AppFrame implements Runnable {
         else {
             try (PrintWriter out = new PrintWriter(this.fileName)) {
                 List<JSONObject> jsonFormat = new ArrayList<>();
-                for (Drawing d : this.drawings) {
+                for (CustomDrawing d : this.drawings) {
                     jsonFormat.add(d.getDrawing());
                 }
                 out.println(jsonFormat);
@@ -147,7 +154,7 @@ public class AppFrame implements Runnable {
     
     public void open(String file) throws FileNotFoundException {
         try {
-            JSONArray a = (JSONArray) parser.parse(new FileReader(file));
+            JSONArray a = new JSONArray(new FileReader(file));
             this.drawings.clear();
             for (Object o : a)
             {
@@ -155,20 +162,20 @@ public class AppFrame implements Runnable {
                 
                 String drawType = (String) d.get("Object");
                 
-                JSONObject action = (JSONObject) person.get("Action");
+                JSONObject action = (JSONObject) d.get("Action");
                 
-                String color = action.get("color");
+                String color = (String) action.get("color");
                 
                 if (drawType.equals("Freehand") || drawType.equals("Eraser")) {
                     ArrayList<ArrayList<Integer>> points = (ArrayList<ArrayList<Integer>>) action.get("Points");
-                    Drawing newDrawing = new Drawing(drawType, color, points);
+                    CustomDrawing newDrawing = new CustomDrawing(drawType, color, points);
                     drawings.add(newDrawing);
                 }
                 else if (drawType.equals("Text")) {
                     int lpx = (int) action.get("lpx");
                     int lpy = (int) action.get("lpy");
                     String text = (String) action.get("text");
-                    Drawing newDrawing = new Drawing(drawType, color, lpx, lpy, text);
+                    CustomDrawing newDrawing = new CustomDrawing(drawType, color, lpx, lpy, text);
                     drawings.add(newDrawing);
                 }
                 else {
@@ -176,13 +183,15 @@ public class AppFrame implements Runnable {
                     int lpy = (int) action.get("lpy");
                     int rpx = (int) action.get("rpx");
                     int rpy = (int) action.get("rpy");
-                    Drawing newDrawing = new Drawing(drawType, color, lpx, lpy, rpx, rpy);
+                    CustomDrawing newDrawing = new CustomDrawing(drawType, color, lpx, lpy, rpx, rpy);
                     drawings.add(newDrawing);
                 }
                 
             }
             
-            this.getCanvasPanel.repaint();
+            this.getCanvasPanel().repaint();
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
         }
     }
     

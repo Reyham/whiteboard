@@ -1,3 +1,5 @@
+package com.framelessboard;
+
 import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputAdapter;
 

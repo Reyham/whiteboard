@@ -1,3 +1,5 @@
+package com.framelessboard;
+
 import javax.swing.SwingUtilities;
 
 public class App 

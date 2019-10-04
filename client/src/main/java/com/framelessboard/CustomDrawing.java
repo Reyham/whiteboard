@@ -1,3 +1,5 @@
+package com.framelessboard;
+
 import org.json.JSONObject;
 import java.awt.geom.*;
 import java.awt.Rectangle;
@@ -9,7 +11,7 @@ public class CustomDrawing {
     public JSONObject drawing;
     
     // Constructor for shapes - lines, rectangles, ellipses and circles.
-    CustomDrawing(String drawType, String color, int lpx, int lpy, int rpx, int rpy) {
+    CustomDrawing(String drawType, String color, int lpx, int lpy, int lrx, int lry) {
         drawing.put("Object", drawType);
         JSONObject attributes = new JSONObject();
         attributes.put("color", color);
