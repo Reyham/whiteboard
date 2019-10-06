@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CustomDrawing {
     
-    public JSONObject drawing;
+    public JSONObject drawing = new JSONObject();
     
     // Constructor for shapes - lines, rectangles, ellipses and circles.
     CustomDrawing(String drawType, String color, int lpx, int lpy, int lrx, int lry) {

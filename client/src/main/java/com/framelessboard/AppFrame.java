@@ -23,7 +23,7 @@ public class AppFrame implements Runnable {
     
     public String fileName;
     public String currentDrawType;
-    public String currentColor;
+    public String currentColor = "BLUE";
     
     // these variables to be used for freehand.
     public List<CustomDrawing> drawings;
@@ -77,14 +77,18 @@ public class AppFrame implements Runnable {
             point.add(p.y);
             newPoints.add(point);
         }
-        
+        System.out.println(currentDrawType);
+        System.out.println(currentColor);
+        System.out.println(newPoints);
         CustomDrawing drawing = new CustomDrawing(currentDrawType, currentColor, newPoints);
+        myHTTPConeect.putCanvas(drawing.drawing);
         drawings.add(drawing);
         freeHandBuffer.clear();
     }
     
     public void storeShape() {
         CustomDrawing drawing = new CustomDrawing(currentDrawType, currentColor, lastPressX, lastPressY, lastReleaseX, lastReleaseY);
+        myHTTPConeect.putCanvas(drawing.drawing);
         drawings.add(drawing);
     }
     
@@ -92,7 +96,7 @@ public class AppFrame implements Runnable {
         CustomDrawing drawing = new CustomDrawing(currentDrawType, currentColor, lastPressX, lastPressY, textBuffer);
         drawings.add(drawing);
     }
-    
+
     @Override
     public void run() {
         frame = new JFrame("MyWhiteboard");
