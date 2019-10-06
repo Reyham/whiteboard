@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Graphics2D;
@@ -103,6 +104,14 @@ public class CanvasPanel extends JPanel {
             break;
         case "DrawAll":
             //g.drawFile();
+            try {
+                myApp.open(myApp.fileName);
+                for (CustomDrawing cd: myApp.drawings){
+                    drawAction(g, cd);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
             break;
         default:
             System.out.println("Uhh what drawing is that?");
@@ -110,10 +119,10 @@ public class CanvasPanel extends JPanel {
         }
     }
 
-    public void drawAction(Graphics g, JSONObject drawing) {
+    public void drawAction(Graphics g, CustomDrawing drawing) {
         Graphics2D g2 = (Graphics2D) g;
-        String object = drawing.getString("Object");
-        JSONObject newAction = drawing.getJSONObject("Action");
+        String object = drawing.getDrawing().getString("Object");
+        JSONObject newAction = drawing.getDrawing().getJSONObject("Action");
         String color = newAction.getString("color");
         g.setColor(Color.getColor(color));
         int width = 0;
