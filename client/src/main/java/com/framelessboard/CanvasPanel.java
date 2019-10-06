@@ -1,5 +1,8 @@
 package com.framelessboard;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -105,5 +108,83 @@ public class CanvasPanel extends JPanel {
             System.out.println("Uhh what drawing is that?");
             break;
         }
-    }    
+    }
+
+    public void drawAction(Graphics g, JSONObject drawing) {
+        Graphics2D g2 = (Graphics2D) g;
+        String object = drawing.getString("Object");
+        JSONObject newAction = drawing.getJSONObject("Action");
+        String color = newAction.getString("color");
+        g.setColor(Color.getColor(color));
+        int width = 0;
+        int height = 0;
+        int lrx = 0;
+        int lry = 0;
+        int lpx = 0;
+        int lpy = 0;
+        JSONArray points;
+        //this will be for freehand - use switch cases of if elses to decide how to repaint.
+        switch (object) {
+            case "Freehand":
+            case "Eraser":
+                points = (JSONArray) newAction.get("Points");
+                for (int i = 1; i < points.length(); i++) {
+                    JSONArray p1 = (JSONArray) points.get(i-1);
+                    JSONArray p2 = (JSONArray) points.get(i);
+                    g.drawLine( (Integer) p1.get(0), (Integer) p1.get(1), (Integer) p2.get(0), (Integer) p2.get(1));
+                }
+                break;
+            case "Rectangle":
+                lrx = newAction.getInt("lrx");
+                lry = newAction.getInt("lry");
+                lpx = newAction.getInt("lpx");
+                lpy = newAction.getInt("lpy");
+                width = Math.abs(lrx - lpx);
+                height = Math.abs(lry - lpx);
+                if (lpx <= lrx && lpy <= lry) {
+                    g.drawRect(lpx, lpy, width, height);
+                }
+                else {
+                    g.drawRect(lrx, lry, width, height);
+                }
+                break;
+            case "Ellipse":
+                lrx = newAction.getInt("lrx");
+                lry = newAction.getInt("lry");
+                lpx = newAction.getInt("lpx");
+                lpy = newAction.getInt("lpy");
+                width = Math.abs(lrx - lpx);
+                height = Math.abs(lry - lpx);
+                if (lpx <= lrx && lpy <= lry) {
+                    g2.draw(new Ellipse2D.Double(lpx, lpy, width, height));
+                }
+                else {
+                    g2.draw(new Ellipse2D.Double(lrx, lry, width, height));
+                }
+                break;
+            case "Circle":
+                lrx = newAction.getInt("lrx");
+                lry = newAction.getInt("lry");
+                lpx = newAction.getInt("lpx");
+                lpy = newAction.getInt("lpy");
+                width = Math.abs(lrx - lpx);
+                height = Math.abs(lry - lpx);
+                if (width <= height) {
+                    width = height;
+                }
+                else {
+                    height = width;
+                }
+                if (lpx <= lrx && lpy <= lry) {
+                    g2.draw(new Ellipse2D.Double(lpx, lpy, width, height));
+                }
+                else {
+                    g2.draw(new Ellipse2D.Double(lrx, lry, width, height));
+                }
+                break;
+            default:
+                System.out.println("Uhh what drawing is that?");
+                break;
+        }
+    }
 }
