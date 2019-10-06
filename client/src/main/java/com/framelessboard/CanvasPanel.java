@@ -131,6 +131,7 @@ public class CanvasPanel extends JPanel {
         int lry = 0;
         int lpx = 0;
         int lpy = 0;
+        String text;
         JSONArray points;
         //this will be for freehand - use switch cases of if elses to decide how to repaint.
         switch (object) {
@@ -190,6 +191,19 @@ public class CanvasPanel extends JPanel {
                 else {
                     g2.draw(new Ellipse2D.Double(lrx, lry, width, height));
                 }
+                break;
+            case "Line":
+                lrx = newAction.getInt("lrx");
+                lry = newAction.getInt("lry");
+                lpx = newAction.getInt("lpx");
+                lpy = newAction.getInt("lpy");
+                g2.draw(new Line2D.Double(lpx, lpy, lrx, lry));
+                break;
+            case "Text":
+                text = newAction.getString("text");
+                lpx = newAction.getInt("lpx");
+                lpy = newAction.getInt("lpy");
+                g2.drawString(text, lpx, lpy);
                 break;
             default:
                 System.out.println("Uhh what drawing is that?");
