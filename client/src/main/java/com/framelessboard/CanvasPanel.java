@@ -104,10 +104,14 @@ public class CanvasPanel extends JPanel {
             break;
         case "DrawAll":
             //g.drawFile();
+            //TODO: Clean whiteboard
             try {
                 myApp.open(myApp.fileName);
+                myApp.myHTTPConnect.postCanvas();
+                //Create new whiteboard
                 for (CustomDrawing cd: myApp.drawings){
                     drawAction(g, cd);
+                    myApp.myHTTPConnect.putCanvas(cd.getDrawing());
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
