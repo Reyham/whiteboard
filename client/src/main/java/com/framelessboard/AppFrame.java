@@ -18,7 +18,7 @@ public class AppFrame implements Runnable {
     
     public JFrame frame;
     public CanvasPanel myCanvasPanel;
-    public HTTPConnect myHTTPConeect;
+    public HTTPConnect myHTTPConnect;
     public String username;
     
     public String fileName;
@@ -43,10 +43,11 @@ public class AppFrame implements Runnable {
         this.freeHandBuffer = new ArrayList<Point>();
         this.textBuffer = "YEET";
         this.fileName = null;
-        this.currentDrawType = "Freehand";
+        this.currentDrawType = "Circle";
         this.username = "abc";
-        this.myHTTPConeect = new HTTPConnect();
-        this.myHTTPConeect.establishConnect(this.username);
+        this.myHTTPConnect = new HTTPConnect();
+        this.myHTTPConnect.establishConnect(this.username);
+        this.myHTTPConnect.postCanvas();
     }
     
     public List<Point> getPoints() {
@@ -77,18 +78,17 @@ public class AppFrame implements Runnable {
             point.add(p.y);
             newPoints.add(point);
         }
-        System.out.println(currentDrawType);
-        System.out.println(currentColor);
-        System.out.println(newPoints);
         CustomDrawing drawing = new CustomDrawing(currentDrawType, currentColor, newPoints);
-        myHTTPConeect.putCanvas(drawing.drawing);
+        System.out.println(drawing.getDrawing());
+        myHTTPConnect.putCanvas(drawing.getDrawing());
         drawings.add(drawing);
         freeHandBuffer.clear();
     }
     
     public void storeShape() {
         CustomDrawing drawing = new CustomDrawing(currentDrawType, currentColor, lastPressX, lastPressY, lastReleaseX, lastReleaseY);
-        myHTTPConeect.putCanvas(drawing.drawing);
+        System.out.println(drawing.getDrawing());
+        myHTTPConnect.putCanvas(drawing.getDrawing());
         drawings.add(drawing);
     }
     
@@ -119,8 +119,8 @@ public class AppFrame implements Runnable {
         e.g. remove myListener and add myListener2 if a user clicks on rectangle,
         or remove myListener2 and add myListener if a user clisk on eraser.
         */
-        myCanvasPanel.addMouseMotionListener(myListener);
-        myCanvasPanel.addMouseListener(myListener);
+        myCanvasPanel.addMouseMotionListener(myListener2);
+        myCanvasPanel.addMouseListener(myListener2);
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(myCanvasPanel);
@@ -190,7 +190,7 @@ public class AppFrame implements Runnable {
                     CustomDrawing newDrawing = new CustomDrawing(drawType, color, lpx, lpy, rpx, rpy);
                     drawings.add(newDrawing);
                 }
-                
+
             }
             
             this.getCanvasPanel().repaint();
