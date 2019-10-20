@@ -4,43 +4,78 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomDrawing {
+public class CustomAction {
     
-    public JSONObject drawing;
+    public JSONObject action;
+    
+    /*
+    
+    General structure of drawing;
+    
+    e.g. 
+    
+    {
+        "Object": "ELLIPSE", 
+        "Action": {
+            "color": "blue",
+            "startX": 10.0,
+            "startY": 10.0,
+            "endX": 20.0,
+            "endY": 20.0
+        }
+    }
+    
+    */
     
     // Constructor for shapes - lines, rectangles, ellipses and circles.
-    CustomDrawing(String drawType, String color, int lpx, int lpy, int rpx, int rpy) {
-        drawing.put("Object", drawType);
+    CustomAction(int actionType, String color, double startX, double startY, double endX, double endY, boolean filled) {
+        action.put("Object", actionType);
         JSONObject attributes = new JSONObject();
         attributes.put("color", color);
-        attributes.put("lpx", lpx);
-        attributes.put("lpy", lpy);
-        attributes.put("lrx", lrx);
-        attributes.put("lry", lry);
-        drawing.put("Action", attributes);
+        attributes.put("startX", startX);
+        attributes.put("startY", startY);
+        attributes.put("endX", endX);
+        attributes.put("endY", endY);
+        attributes.put("filled", filled);
+        action.put("Action", attributes);
     }
     
     // Constructor for freehand drawings - freehand lines and erasers.
-    CustomDrawing(String drawType, String color, ArrayList<ArrayList<Integer>> points) {
-        drawing.put("Object", drawType);
+    CustomAction(int actionType, String color, double strokeWidth) {
+        action.put("Object", actionType);
         JSONObject attributes = new JSONObject();
-        attributes.put("color", color);
-        attributes.put("Points", points);
-        drawing.put("Action", attributes);
+        attributes.put("StrokeWidth", strokeWidth);
+        action.put("Action", attributes);
     }
     
     // Constructor for text drawings.
-    CustomDrawing(String drawType, String color, int lpx, int lpy, String text) {
-        drawing.put("Object", drawType);
+    CustomAction(int actionType, String color, double startX, double startY, String text) {
+        action.put("Object", actionType);
         JSONObject attributes = new JSONObject();
         attributes.put("color", color);
-        attributes.put("lpx", lpx);
-        attributes.put("lpy", lpy);
+        attributes.put("startX", lpx);
+        attributes.put("startY", lpy);
         attributes.put("text", text);
+        action.put("Action", attributes);
     }
     
-    public JSONObject getDrawing() {
-        return drawing;
+    // Constructur for background.
+    CustomAction(int actionType, String encoding) {
+        action.put("Object", actionType)
+        JSONObject attributes = new JSONObject();
+        attributes.put("encoding", encoding);
+        action.put("Action", attributes);
+    }
+    
+    // Constructor for chat messages.
+    CustomAction(int actionType, String message) {
+        action.put("Object", actionType)
+        JSONObject attributes = new JSONObject();
+        attributes.put("message", message);
+    }
+    
+    public JSONObject getAction() {
+        return action;
     }
     
 }
